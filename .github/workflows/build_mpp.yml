@@ -1,0 +1,40 @@
+name: Build mpp
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'claude/**'
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  build:
+    name: Build mpp
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5.6.0
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Gradle
+        uses: burrunan/gradle-cache-action@v3
+
+      - name: Build with Gradle
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew clean build
+
+      - name: Upload mpp
+        uses: actions/upload-artifact@v4
+        with:
+          name: piko-mpp
+          path: patches/build/libs/patches-*.mpp
+          if-no-files-found: error
