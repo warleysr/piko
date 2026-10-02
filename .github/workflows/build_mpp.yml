@@ -41,7 +41,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: piko-mpp
-          path: patches/build/libs/patches-*.mpp
+          path: |
+            patches/build/libs/patches-*.mpp
+            !patches/build/libs/patches-*-javadoc.mpp
+            !patches/build/libs/patches-*-sources.mpp
           if-no-files-found: error
 
   release:
