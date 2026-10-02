@@ -94,6 +94,8 @@
     <string name="piko_loop_story">Loop story</string>
     <string name="piko_loop_story_desc">Replay the current story when it ends</string>
     <string name="piko_disable_video_autoplay">Disable video autoplay</string>
+    <string name="piko_keep_screen_on_while_playing">Keep screen on while playing video</string>
+    <string name="piko_keep_screen_on_while_playing_desc">Prevents the screen from turning off while a video is playing, like in Reels</string>
     <string name="piko_stories_audio_autoplay">Stories audio autoplay</string>
     <string name="piko_customise_story_timestamp">Customise story timestamp</string>
     <string name="piko_customise_story_timestamp_desc">Customise the timestamp that shows when the story was posted</string>

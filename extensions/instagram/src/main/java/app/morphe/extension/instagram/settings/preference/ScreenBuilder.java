@@ -557,6 +557,15 @@ public class ScreenBuilder {
                     )
             );
         }
+        if (SettingsStatus.keepScreenOnWhilePlaying) {
+            addPreference(
+                    helper.switchPreference(
+                            str("piko_keep_screen_on_while_playing"),
+                            str("piko_keep_screen_on_while_playing_desc"),
+                            Settings.KEEP_SCREEN_ON_WHILE_PLAYING
+                    )
+            );
+        }
         if (SettingsStatus.storiesAudioAutoplay) {
             addPreference(
                     helper.switchPreference(
