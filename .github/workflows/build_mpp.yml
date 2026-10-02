@@ -2,6 +2,11 @@ name: Build mpp
 
 on:
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Publish the mpp as a GitHub release (tag v<version> from gradle.properties)'
+        type: boolean
+        default: false
   push:
     branches:
       - 'claude/**'
@@ -38,3 +43,30 @@ jobs:
           name: piko-mpp
           path: patches/build/libs/patches-*.mpp
           if-no-files-found: error
+
+  release:
+    name: Release mpp
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && inputs.release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download mpp
+        uses: actions/download-artifact@v4
+        with:
+          name: piko-mpp
+          path: dist
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(sed -n 's/^version *= *//p' gradle.properties)
+          gh release create "v$version" dist/*.mpp \
+            --target "$GITHUB_SHA" \
+            --title "Piko v$version" \
+            --notes "Build of \`$GITHUB_SHA\` from run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
