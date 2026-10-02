@@ -30,7 +30,7 @@ jobs:
       - name: Build with Gradle
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew clean build
+        run: ./gradlew clean :patches:build
 
       - name: Upload mpp
         uses: actions/upload-artifact@v4
