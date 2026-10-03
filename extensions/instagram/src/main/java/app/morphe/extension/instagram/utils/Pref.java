@@ -301,6 +301,12 @@ public class Pref {
     public static boolean downloadWithExternalDownloader() {
         return SharedPref.getBooleanPref(Settings.DOWNLOAD_WITH_EXTERNAL_DOWNLOADER) && SettingsStatus.downloadWithExternalDownloader;
     }
+    public static boolean carouselAutoScroll() {
+        return SharedPref.getBooleanPref(Settings.CAROUSEL_AUTO_SCROLL) && SettingsStatus.carouselAutoScroll;
+    }
+    public static void setCarouselAutoScroll(boolean enabled) {
+        SharedPref.setBooleanPref(Settings.CAROUSEL_AUTO_SCROLL.key, enabled);
+    }
 
     public static String externalDownloaderPackageName() {
         return SharedPref.getStringPref(Settings.EXTERNAL_DOWNLOADER_PACKAGE_NAME);

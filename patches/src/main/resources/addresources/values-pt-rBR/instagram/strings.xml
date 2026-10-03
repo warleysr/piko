@@ -164,6 +164,10 @@
     <string name="piko_enable_more_options_on_post">Ativar mais opções no post</string>
     <string name="piko_enable_more_options_on_post_desc">Adiciona um botão de  \'Mais opções\'  no post para: copiar descrição, copiar nome de usuário, etc.</string>
     <string name="piko_more_options">Mais opções</string>
+    <string name="piko_carousel_auto_scroll_off">Rolagem automática: desligada</string>
+    <string name="piko_carousel_auto_scroll_on">Rolagem automática: ligada</string>
+    <string name="piko_carousel_auto_scroll_enabled">Rolagem automática do carrossel ativada</string>
+    <string name="piko_carousel_auto_scroll_disabled">Rolagem automática do carrossel desativada</string>
     <!-- Navigation Section -->
     <string name="piko_category_hide_navigation_buttons">Ocultar botões de navegação</string>
     <string name="piko_hide_navigation_feed">Ocultar botão Feed</string>

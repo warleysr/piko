@@ -8,6 +8,7 @@ package app.crimera.patches.instagram.misc.overflowMenuButton.posts
 
 import app.crimera.patches.instagram.entity.decoder.CURRENT_MEDIA_FIELD
 import app.crimera.patches.instagram.entity.decoder.MEDIA_ADD_INFO_CLASS_NAME
+import app.crimera.patches.instagram.entity.decoder.decoderEntity
 import app.crimera.patches.instagram.misc.download.FeedButtonOnClickFingerprint
 import app.crimera.patches.instagram.utils.Constants
 import app.crimera.patches.instagram.utils.Constants.COMPATIBILITY_INSTAGRAM
@@ -27,6 +28,8 @@ val hookOverflowMenuButtonOnClickPatch =
         description = "Hooks feed overflow menu on click.",
     ) {
         compatibleWith(COMPATIBILITY_INSTAGRAM)
+        // Provides MEDIA_ADD_INFO_CLASS_NAME and CURRENT_MEDIA_FIELD.
+        dependsOn(decoderEntity)
         execute {
             FeedButtonOnClickFingerprint.apply {
                 val classDef = classDef
