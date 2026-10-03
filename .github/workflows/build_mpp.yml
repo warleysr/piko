@@ -7,6 +7,14 @@ on:
         description: 'Publish the mpp as a GitHub release (tag v<version> from gradle.properties)'
         type: boolean
         default: false
+      notes:
+        description: 'Release notes in Markdown (defaults to the commit and run the mpp was built from)'
+        type: string
+        default: ''
+      delete_previous_releases:
+        description: 'Delete every existing release and its tag before publishing'
+        type: boolean
+        default: false
   push:
     branches:
       - 'claude/**'
@@ -70,15 +78,28 @@ jobs:
           name: piko-mpp
           path: dist
 
-      - name: Create release
+      - name: Delete previous releases
+        if: inputs.delete_previous_releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          gh release list --limit 1000 --json tagName --jq '.[].tagName' | while read -r tag; do
+            gh release delete "$tag" --cleanup-tag --yes
+          done
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTES: ${{ inputs.notes }}
+        run: |
           version=$(sed -n 's/^version *= *//p' gradle.properties)
+          if [ -z "$NOTES" ]; then
+            NOTES="Build of \`$GITHUB_SHA\` from run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
+          fi
           gh release create "v$version" dist/*.mpp \
             --target "$GITHUB_SHA" \
             --title "Piko v$version" \
-            --notes "Build of \`$GITHUB_SHA\` from run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
+            --notes "$NOTES"
 
       # Morphe Manager reads patches-bundle.json from the default branch to find the mpp of a remote source.
       # Without this it keeps downloading the release the file pointed to before.
