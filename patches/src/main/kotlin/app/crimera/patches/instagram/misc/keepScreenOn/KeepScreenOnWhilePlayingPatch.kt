@@ -16,6 +16,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.literal
+import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.PatchException
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.string
@@ -73,6 +74,32 @@ private fun Method.indexOfPlayerBooleanCall(startIndex: Int, playerClass: String
             (playerClass == null || reference.parameterTypes[0] == playerClass)
     }
 
+/**
+ * The static setKeepScreenOn(Player;Z)V method of the hero player, whose first parameter is the player class.
+ */
+context(patchContext: BytecodePatchContext)
+internal fun playerSetKeepScreenOnMethod(): MethodReference =
+    VideoStartPlayingFingerprint.method.let { method ->
+        val settingIndex = VideoStartPlayingFingerprint.instructionMatches.last().index
+        val index = method.indexOfPlayerBooleanCall(settingIndex)
+        if (index < 0) throw PatchException("Could not find setKeepScreenOn call")
+        method.getInstruction(index).getReference<MethodReference>()
+            ?: throw PatchException("Could not find setKeepScreenOn call")
+    }
+
+/**
+ * The call that stops the player in the completion callback.
+ * Its first register holds the player, and its boolean register is free to reuse after the call.
+ */
+context(patchContext: BytecodePatchContext)
+internal fun videoCompletionStopCall(playerClass: String): Pair<Int, FiveRegisterInstruction> =
+    VideoCompletionFingerprint.method.let { method ->
+        val stringIndex = VideoCompletionFingerprint.instructionMatches.first().index
+        val index = method.indexOfPlayerBooleanCall(stringIndex, playerClass)
+        if (index < 0) throw PatchException("Could not find player stop call")
+        index to method.getInstruction<FiveRegisterInstruction>(index)
+    }
+
 @Suppress("unused")
 val keepScreenOnWhilePlayingPatch =
     bytecodePatch(
@@ -83,16 +110,11 @@ val keepScreenOnWhilePlayingPatch =
         compatibleWith(COMPATIBILITY_INSTAGRAM)
 
         execute {
-            val setKeepScreenOnMethod: MethodReference
+            val setKeepScreenOnMethod = playerSetKeepScreenOnMethod()
 
             VideoStartPlayingFingerprint.method.apply {
                 val settingIndex = VideoStartPlayingFingerprint.instructionMatches.last().index
                 val register = getInstruction<TwoRegisterInstruction>(settingIndex).registerA
-
-                val setKeepScreenOnIndex = indexOfPlayerBooleanCall(settingIndex)
-                if (setKeepScreenOnIndex < 0) throw PatchException("Could not find setKeepScreenOn call")
-                setKeepScreenOnMethod = getInstruction(setKeepScreenOnIndex).getReference<MethodReference>()
-                    ?: throw PatchException("Could not find setKeepScreenOn call")
 
                 addInstructions(
                     settingIndex + 1,
@@ -138,12 +160,7 @@ val keepScreenOnWhilePlayingPatch =
                 }
 
             VideoCompletionFingerprint.method.apply {
-                val stringIndex = VideoCompletionFingerprint.instructionMatches.first().index
-                val stopIndex = indexOfPlayerBooleanCall(stringIndex, playerClass)
-                if (stopIndex < 0) throw PatchException("Could not find player stop call")
-
-                // The boolean argument is not used after the call, so it is free to reuse.
-                val stopCall = getInstruction<FiveRegisterInstruction>(stopIndex)
+                val (stopIndex, stopCall) = videoCompletionStopCall(playerClass)
                 val playerRegister = stopCall.registerC
                 val freeRegister = stopCall.registerD
 

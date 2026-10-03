@@ -198,6 +198,8 @@ public class SettingsStatus {
     public static void disableVideoAutoplay() { disableVideoAutoplay = true; }
     public static boolean keepScreenOnWhilePlaying = false;
     public static void keepScreenOnWhilePlaying() { keepScreenOnWhilePlaying = true; }
+    public static boolean carouselAutoScroll = false;
+    public static void carouselAutoScroll() { carouselAutoScroll = true; }
     public static boolean storiesAudioAutoplay = false;
     public static void storiesAudioAutoplay() { storiesAudioAutoplay = true; }
     public static boolean moreOptionsOnPost = false;
