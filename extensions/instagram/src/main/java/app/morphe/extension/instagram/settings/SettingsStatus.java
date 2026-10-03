@@ -196,13 +196,15 @@ public class SettingsStatus {
     }
     public static boolean disableVideoAutoplay = false;
     public static void disableVideoAutoplay() { disableVideoAutoplay = true; }
+    public static boolean keepScreenOnWhilePlaying = false;
+    public static void keepScreenOnWhilePlaying() { keepScreenOnWhilePlaying = true; }
     public static boolean storiesAudioAutoplay = false;
     public static void storiesAudioAutoplay() { storiesAudioAutoplay = true; }
     public static boolean moreOptionsOnPost = false;
     public static void moreOptionsOnPost() { moreOptionsOnPost = true; }
     public static boolean moreOptionsOnProfile = false;
     public static void moreOptionsOnProfile() { moreOptionsOnProfile = true; }
-    public static boolean miscSection() {return ( saveMediaCommentButton || moreOptionsOnProfile || moreOptionsOnPost || customiseStoryRingSize || changeLikeAnimation || unlockPlusBenefits || storiesAudioAutoplay || disableVideoAutoplay || removeEmptyBottomSpace || copyCommentButton || improveImageViewing || customiseStoryTimestamp || disableAnalytics || disableDiscoverPeople || followBackIndicator || viewStoryMentions || disableStoryFlipping || loopStory || hideReshareButton);}
+    public static boolean miscSection() {return ( saveMediaCommentButton || moreOptionsOnProfile || moreOptionsOnPost || customiseStoryRingSize || changeLikeAnimation || unlockPlusBenefits || storiesAudioAutoplay || disableVideoAutoplay || keepScreenOnWhilePlaying || removeEmptyBottomSpace || copyCommentButton || improveImageViewing || customiseStoryTimestamp || disableAnalytics || disableDiscoverPeople || followBackIndicator || viewStoryMentions || disableStoryFlipping || loopStory || hideReshareButton);}
 
     //DM section
     public static boolean unlimitedReplaysOnEphemeralMedia = false;
@@ -243,6 +245,7 @@ public class SettingsStatus {
         FLAGS.put(str("piko_stories_audio_autoplay"),SettingsStatus.storiesAudioAutoplay);
 
         FLAGS.put(str("piko_disable_video_autoplay"),SettingsStatus.disableVideoAutoplay);
+        FLAGS.put(str("piko_keep_screen_on_while_playing"),SettingsStatus.keepScreenOnWhilePlaying);
         FLAGS.put(str("piko_remove_empty_bottom_space"),SettingsStatus.removeEmptyBottomSpace);
         FLAGS.put(str("piko_save_media_comment"),SettingsStatus.saveMediaCommentButton);
         FLAGS.put(str("piko_copy_comment"),SettingsStatus.copyCommentButton);

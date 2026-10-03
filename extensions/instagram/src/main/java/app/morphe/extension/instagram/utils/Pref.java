@@ -114,6 +114,10 @@ public class Pref {
         return SharedPref.getBooleanPref(Settings.DISABLE_VIDEO_AUTOPLAY);
     }
 
+    public static boolean keepScreenOnWhilePlaying() {
+        return SharedPref.getBooleanPref(Settings.KEEP_SCREEN_ON_WHILE_PLAYING);
+    }
+
     public static boolean storiesAudioAutoplay() {
         return SharedPref.getBooleanPref(Settings.STORIES_AUDIO_AUTOPLAY);
     }

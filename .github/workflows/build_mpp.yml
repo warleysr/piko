@@ -32,10 +32,16 @@ jobs:
       - name: Cache Gradle
         uses: burrunan/gradle-cache-action@v3
 
+      # buildAndroid adds classes.dex to the mpp. Without it Morphe Manager on Android loads 0 patches.
       - name: Build with Gradle
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew clean :patches:build
+        run: ./gradlew clean :patches:buildAndroid
+
+      - name: Check mpp contains DEX
+        run: |
+          mpp=$(ls patches/build/libs/patches-*.mpp | grep -v -e '-javadoc' -e '-sources')
+          unzip -l "$mpp" | grep -q ' classes.dex$'
 
       - name: Upload mpp
         uses: actions/upload-artifact@v4
